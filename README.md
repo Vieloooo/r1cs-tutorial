@@ -1,4 +1,4 @@
-<h1 align="center">Introduction to SNARK Development with `arkworks`</h1>
+<!--  --><h1 align="center">Introduction to SNARK Development with `arkworks`</h1>
 
 In this tutorial, we will learn how to write applications for use with state-of-the-art zkSNARKs using the [`arkworks`](https://arkworks.rs) ecosystem of SNARK libraries.
 

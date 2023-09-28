@@ -19,6 +19,8 @@ impl Config for MerkleConfig {
 /// A Merkle tree containing account information.
 pub type SimpleMerkleTree = MerkleTree<MerkleConfig>;
 /// The root of the account Merkle tree.
+/// 关联类型, 参考: https://rustwiki.org/zh-CN/rust-by-example/generics/assoc_items/types.html
+/// 
 pub type Root = <TwoToOneHash as TwoToOneCRH>::Output;
 /// A membership proof for a given account.
 pub type SimplePath = Path<MerkleConfig>;
@@ -26,9 +28,11 @@ pub type SimplePath = Path<MerkleConfig>;
 // Run this test via `cargo test --release test_merkle_tree`.
 #[test]
 fn test_merkle_tree() {
+    // CRH: collision resistant hash lib
     use ark_crypto_primitives::crh::CRH;
     // Let's set up an RNG for use within tests. Note that this is *not* safe
-    // for any production use.
+    // for any production use.o
+    // Rng: random number generator 
     let mut rng = ark_std::test_rng();
 
     // First, let's sample the public parameters for the hash functions:
@@ -50,6 +54,7 @@ fn test_merkle_tree() {
 
     // First, let's get the root we want to verify against:
     let root = tree.root();
+    //println!("Root of the Merkle Tree: {:?}\nProof for node 4 {:?}. ", root, proof);
     // Next, let's verify the proof!
     let result = proof
         .verify(
