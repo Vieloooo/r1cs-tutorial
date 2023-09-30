@@ -144,7 +144,7 @@ impl<const NUM_TX: usize> Rollup<NUM_TX> {
         })
     }
 }
-
+//Build a constraint system to validatey tx batchs 
 impl<const NUM_TX: usize> ConstraintSynthesizer<ConstraintF> for Rollup<NUM_TX> {
     #[tracing::instrument(target = "r1cs", skip(self, cs))]
     fn generate_constraints(
@@ -168,8 +168,9 @@ impl<const NUM_TX: usize> ConstraintSynthesizer<ConstraintF> for Rollup<NUM_TX> 
         let mut prev_root = initial_root;
 
         for i in 0..NUM_TX {
+            //get the i-th from batch 
             let tx = self.transactions.as_ref().and_then(|t| t.get(i));
-
+            //load tx info 
             let sender_acc_info = self.sender_pre_tx_info_and_paths.as_ref().map(|t| t[i].0);
             let sender_pre_path = self.sender_pre_tx_info_and_paths.as_ref().map(|t| &t[i].1);
 
@@ -200,6 +201,9 @@ impl<const NUM_TX: usize> ConstraintSynthesizer<ConstraintF> for Rollup<NUM_TX> 
             // ... and authentication path after the update.
             // TODO: Fill in the following
             // let sender_post_path = ???
+            let sender_post_path = AccPathVar::new_witness(ark_relations::ns!(cs, "Sender Post-Path"), || {
+                    sender_post_path.ok_or(SynthesisError::AssignmentMissing)
+                })?;
 
             // Declare the recipient's initial account balance...
             let recipient_acc_info = AccountInformationVar::new_witness(
@@ -215,6 +219,10 @@ impl<const NUM_TX: usize> ConstraintSynthesizer<ConstraintF> for Rollup<NUM_TX> 
             // ... and authentication path after the update.
             // TODO: Fill in the following
             // let recipient_post_path = ???
+            let recipient_post_path = AccPathVar::new_witness(ark_relations::ns!(cs, "Recipient Post path"), 
+        || {
+            recipient_post_path.ok_or(SynthesisError::AssignmentMissing)
+        })?;
 
             // Declare the state root before the transaction...
             let pre_tx_root =
@@ -230,21 +238,21 @@ impl<const NUM_TX: usize> ConstraintSynthesizer<ConstraintF> for Rollup<NUM_TX> 
             // Enforce that the state root after the previous transaction equals
             // the starting state root for this transaction
             // TODO: Write this
-
+            prev_root.enforce_equal(&pre_tx_root)?;
             // Validate that the transaction signature and amount is correct.
             // TODO: Uncomment this
-            // tx.validate(
-            //     &ledger_params,
-            //     &sender_acc_info,
-            //     &sender_pre_path,
-            //     &sender_post_path,
-            //     &recipient_acc_info,
-            //     &recipient_pre_path,
-            //     &recipient_post_path,
-            //     &pre_tx_root,
-            //     &post_tx_root,
-            // )?
-            // .enforce_equal(&Boolean::TRUE)?;
+            tx.validate(
+                &ledger_params,
+                &sender_acc_info,
+                &sender_pre_path,
+                &sender_post_path,
+                &recipient_acc_info,
+                &recipient_pre_path,
+                &recipient_post_path,
+                &pre_tx_root,
+                &post_tx_root,
+            )?
+            .enforce_equal(&Boolean::TRUE)?;
 
             // Set the root for the next transaction.
             prev_root = post_tx_root;
@@ -252,6 +260,7 @@ impl<const NUM_TX: usize> ConstraintSynthesizer<ConstraintF> for Rollup<NUM_TX> 
         // Check that the final root is consistent with the root computed after
         // applying all state transitions
         // TODO: implement this
+        prev_root.enforce_equal(&final_root)?;
         Ok(())
     }
 }
