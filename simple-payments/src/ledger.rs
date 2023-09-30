@@ -72,8 +72,7 @@ impl pedersen::Window for LeafWindow {
 }
 
 #[derive(Clone)]
-pub struct MerkleConfig;
-impl merkle_tree::Config for MerkleConfig {
+pub struct MerkleConfig;impl merkle_tree::Config for MerkleConfig {
     type LeafHash = LeafHash;
     type TwoToOneHash = TwoToOneHash;
 }
