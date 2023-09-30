@@ -239,7 +239,7 @@ impl UnaryRollup {
 impl ConstraintSynthesizer<ConstraintF> for UnaryRollup {
     fn generate_constraints(
         self,
-        cs: constraintSystemRef<ConstraintF>,
+        cs: ConstraintSystemRef<ConstraintF>,
     ) -> Result<(), SynthesisError> {
         // Declare the parameters as constants.
         let ledger_params = ParametersVar::new_constant(
