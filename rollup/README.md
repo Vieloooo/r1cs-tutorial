@@ -6,12 +6,12 @@ SNARK proofs of validity of a batch of transactions are one way increasingly pop
 
 At a high level, the constraint system for batch verification works as follows:
 
-* Public input: initial state root (i.e., before applying current batch of transactions) and final state root (i.e., after applying current batch)
-* Private inputs: current batch of transactions
+* Public input: initial state root (i.e., before applying current batch of transactions) and final state root (i.e., after applying current batch). state root is the merkle root of all account info. 
+* Private inputs: current batch of transactions (sender id, receiver id, amount, sig)
 * Checks:
 
   For each transaction in the batch, check the validity of applying that transaction:
-  1) Check a Merkle Tree path wrt initial root that demonstrates the existence of the sender's account.
+  1) Check a Merkle Tree path wrt initial root that demonstrates the existence of the sender's account. 
   2) Check a Merkle Tree path wrt initial root that demonstrates the existence of the receiver's account.
   3) Verify the signature in the transaction with respect to the sender's public key.
   4) Verify that sender.balance >= tx.amount (i.e., sender has sufficient funds).

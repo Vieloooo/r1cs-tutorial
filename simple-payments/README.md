@@ -45,3 +45,18 @@ Our implementation uses the Merkle tree of [`ark-crypto-primitives`](https://doc
 ## Code walk-through
 
 To get an overview of important data structures as well as their associated methods, run `cargo doc --open --no-deps`.
+
+
+# Notes 
+- All leaves are transparent to all users 
+
+# Read Progress 
+-  `account.rs`: Just declare `account` object, which saving `pk, sk` 
+- `lib:rs`: declare all the mod used in this crate, including an external crate 
+- `signature`: provie keygen, sign and verify interface
+    - In `mod.rs`: This mod define a std signuatre trait, and the test for this trait 
+    - In `constraint.rs`: This mod defines the std signature for r1cs system, 
+    - `Schnorr`: implementation folder for the above traits. 
+        - `mod.rs`: stand cryptography implementation(without using snark) for schnorr 
+        - 
+- `ledger:rs`: the whole project only using R1CS circuit to execute some verification jobs.  we can validate some witness and input using this constraints.  

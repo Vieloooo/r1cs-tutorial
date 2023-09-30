@@ -89,7 +89,7 @@ fn merkle_tree_constraints_correctness() {
     .unwrap();
 
     // Now, let's try to generate a membership proof for the 5th item, i.e. 9.
-    let proof = tree.generate_proof(4).unwrap(); // we're 0-indexing!
+    let proof: ark_crypto_primitives::Path<crate::MerkleConfig> = tree.generate_proof(4).unwrap(); // we're 0-indexing!
                                                  // This should be a proof for the membership of a leaf with value 9. Let's check that!
 
     // First, let's get the root we want to verify against:

@@ -20,6 +20,7 @@ impl AccountId {
 
 impl AccountId {
     /// Increment the identifier in place.
+    /// This function is public in the whole crate (simple-payments)
     pub(crate) fn checked_increment(&mut self) -> Option<()> {
         self.0.checked_add(1).map(|result| self.0 = result)
     }

@@ -65,6 +65,7 @@ impl TransactionVar {
             post_root
         )
     )]
+    /// for a single tx in the batch, validate if the tx follows the transaction rule.  
     pub fn validate(
         &self,
         parameters: &ledger::ParametersVar,
@@ -80,7 +81,7 @@ impl TransactionVar {
         // Verify the signature against the sender pubkey.
         // TODO: FILL IN THE BLANK
         // let sig_verifies = ???;
-
+        let sig_verifies = self.verify_signature(parameters, &pre_sender_acc_info.public_key).unwrap(); 
         // Compute the new sender balance.
         let mut post_sender_acc_info = pre_sender_acc_info.clone();
         // TODO: Safely subtract amount sent from the sender's balance
@@ -227,7 +228,7 @@ impl UnaryRollup {
 impl ConstraintSynthesizer<ConstraintF> for UnaryRollup {
     fn generate_constraints(
         self,
-        cs: ConstraintSystemRef<ConstraintF>,
+        cs: constraintSystemRef<ConstraintF>,
     ) -> Result<(), SynthesisError> {
         // Declare the parameters as constants.
         let ledger_params = ParametersVar::new_constant(

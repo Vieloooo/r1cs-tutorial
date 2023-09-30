@@ -79,7 +79,7 @@ mod test {
     }
 
     #[test]
-    fn schnorr_signature_test() {
+    fn schnorr_signature_test2() {
         type F = <JubJub as ProjectiveCurve>::BaseField;
         let message = "Hi, I am a Schnorr signature!";
         sign_and_verify::<
